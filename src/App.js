@@ -5,22 +5,27 @@ import "./App.css"
 import "fontsource-roboto"
 import "./assets/scss/style.scss"
 
+import Swal from "sweetalert2"
 import Grid from "@material-ui/core/Grid"
+import Link from "@material-ui/core/Link"
 import Button from "@material-ui/core/Button"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
 import Backdrop from "@material-ui/core/Backdrop"
 import TextField from "@material-ui/core/TextField"
 import Container from "@material-ui/core/Container"
-import InputLabel from "@material-ui/core/InputLabel"
 import Typography from "@material-ui/core/Typography"
-import FormControl from "@material-ui/core/FormControl"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import {
   makeStyles,
   MuiThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles"
+
+import EmailIcon from "@material-ui/icons/Email"
+import GitHubIcon from "@material-ui/icons/GitHub"
+import LanguageIcon from "@material-ui/icons/Language"
+import LinkedInIcon from "@material-ui/icons/LinkedIn"
+import InstagramIcon from "@material-ui/icons/Instagram"
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks"
 
 import API from "./config"
 
@@ -49,92 +54,63 @@ function App() {
   const classes = useStyles()
 
   const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState(false)
   const [disabled, setDisabled] = React.useState(true)
-  const [sales, setSales] = React.useState(null)
-  const [shippingCost, setShippingCost] = React.useState(null)
-  const [productCategory, setProductCategory] = React.useState(null)
-  const [orderPriority, setOrderPriority] = React.useState(null)
-  const [profit, setProfit] = React.useState(null)
+  const [message, setMessage] = React.useState(null)
 
   const handleChangeInput = (event) => {
-    if (event.target.name === "sales") {
-      setSales(event.target.value)
-    } else if (event.target.name === "shippingCost") {
-      setShippingCost(event.target.value)
-    } else if (event.target.name === "productCategory") {
-      setProductCategory(event.target.value)
-    } else if (event.target.name === "orderPriority") {
-      setOrderPriority(event.target.value)
+    if (event.target.name === "message") {
+      setMessage(event.target.value)
     }
   }
 
-  const handlePredict = async () => {
+  const handleSubmit = async () => {
     setLoading(true)
     const payload = {
-      sales: parseInt(sales, 10),
-      shipping_cost: parseInt(shippingCost, 10),
-      auto_and_accessories: parseInt(productCategory[0], 10),
-      electronic: parseInt(productCategory[1], 10),
-      fashion: parseInt(productCategory[2], 10),
-      home_and_furniture: parseInt(productCategory[3], 10),
-      "order_priority-critical": parseInt(orderPriority[0], 10),
-      "order_priority-high": parseInt(orderPriority[1], 10),
-      "order_priority-medium": parseInt(orderPriority[2], 10),
-      "order_priority-low": parseInt(orderPriority[3], 10),
+      message,
     }
     await axios
-      .post(API.backend, payload)
+      .post(`${API.backend}post`, payload)
       .then((response) => {
         console.log(response)
-        if (response.data && response.data.profit) {
+        if (response.data && response.data.message) {
           setLoading(false)
-          setProfit(response.data.profit)
-          console.log(response.data.profit)
+          console.log(response.data.message)
+          Swal.fire(
+            "Thank you!",
+            "Your message has been successfully sent",
+            "success"
+          )
         } else {
           setLoading(false)
-          alert("Gagal! Ada error internal")
           console.log("error response")
+          Swal.fire(
+            "Oops!",
+            "Something went wrong! Please try again later",
+            "error"
+          )
         }
       })
       .catch((e) => {
         console.log("error catch")
         console.log(e.response)
-        alert("Gagal! Ada error internal")
+        Swal.fire(
+          "Oops!",
+          "Something went wrong! Please try again later",
+          "error"
+        )
       })
   }
 
   React.useEffect(() => {
-    async function checkIsNaN() {
-      if (
-        (sales && Number.isNaN(Number(sales))) ||
-        (shippingCost && Number.isNaN(Number(shippingCost)))
-      ) {
-        setError(true)
-      } else {
-        setError(false)
-      }
-    }
-    checkIsNaN()
-  }, [sales, shippingCost])
-
-  React.useEffect(() => {
     async function checkDisabled() {
-      if (
-        !error &&
-        sales &&
-        shippingCost &&
-        productCategory &&
-        orderPriority &&
-        !loading
-      ) {
-        setDisabled(false)
-      } else {
+      if (!message || loading) {
         setDisabled(true)
+      } else {
+        setDisabled(false)
       }
     }
     checkDisabled()
-  }, [error, sales, shippingCost, productCategory, orderPriority, loading])
+  }, [message, loading])
 
   return (
     <MuiThemeProvider theme={muiTheme}>
@@ -142,7 +118,7 @@ function App() {
         <div className="auth-wrapper">
           <div className="auth-content">
             <div className="auth-bg">
-              <span className="r s" />
+              <span className="r" />
               <span className="r s" />
               <span className="r s" />
               <span className="r" />
@@ -156,82 +132,52 @@ function App() {
                 <CircularProgress color="inherit" />
               </Backdrop>
               <Grid container spacing={3} justify="center" my={10}>
-                <Typography variant="h6" gutterBottom>
-                  E-commerce Profit Prediction
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  II4042 AI for Business
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  18217017 - 18217029 - 18217038
-                </Typography>
                 <Grid item xs={12}>
-                  <TextField
-                    name="sales"
-                    label="Sales (Rp)"
-                    variant="outlined"
-                    onChange={handleChangeInput}
-                    error={sales && Number.isNaN(Number(sales))}
-                    helperText={
-                      sales && Number.isNaN(Number(sales)) ? "Input salah" : ""
-                    }
-                  />
+                  <Typography variant="h4" gutterBottom>
+                    Hi,{" "}
+                    <a
+                      href="https://www.google.com/search?q=orang+baik+in+english"
+                      target="_blank"
+                      rel="noreferrer"
+                      // styles={{ color: "#76ff03" }}
+                    >
+                      orang baik
+                    </a>
+                    !
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    My name is <b>Alfian (cimbot) Maulana</b>, and this is my
+                    personal{" "}
+                    <a
+                      href="https://secreto.site/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      secreto
+                    </a>
+                    -like site.
+                    <br />
+                    Feel free to give me feedback, idea, suggestion, advice,{" "}
+                    <i>curhat</i>, or anything else! I appreciate that and thank
+                    you very much, have a nice day!
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    name="shippingCost"
-                    label="Shipping Cost (Rp)"
+                    name="message"
+                    label="Your Message"
                     variant="outlined"
                     onChange={handleChangeInput}
-                    error={shippingCost && Number.isNaN(Number(shippingCost))}
                     helperText={
-                      shippingCost && Number.isNaN(Number(shippingCost))
-                        ? "Input salah"
+                      message
+                        ? "Feel free to send it anonymously or with your name/contact"
                         : ""
                     }
+                    multiline
+                    fullWidth
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="product-category-selector">
-                      Product Category
-                    </InputLabel>
-                    <Select
-                      name="productCategory"
-                      labelId="product-category-selector"
-                      label="Product Category"
-                      onChange={handleChangeInput}
-                    >
-                      <MenuItem value="1000">Auto & Accessories</MenuItem>
-                      <MenuItem value="0100">Electronic</MenuItem>
-                      <MenuItem value="0010">Fashion</MenuItem>
-                      <MenuItem value="0001">Home & Furniture</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="order-priority-selector">
-                      Order Priority
-                    </InputLabel>
-                    <Select
-                      name="orderPriority"
-                      labelId="order-priority-selector"
-                      label="Order Priority"
-                      onChange={handleChangeInput}
-                    >
-                      <MenuItem value="1000">Critical</MenuItem>
-                      <MenuItem value="0100">High</MenuItem>
-                      <MenuItem value="0010">Medium</MenuItem>
-                      <MenuItem value="0001">Low</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <Button
@@ -239,30 +185,55 @@ function App() {
                     variant="contained"
                     style={{ textTransform: "none" }}
                     disabled={disabled}
-                    onClick={handlePredict}
+                    onClick={handleSubmit}
                   >
-                    Predict
+                    Submit
                   </Button>
                 </Grid>
-                {profit ? (
-                  <Grid item xs={12}>
-                    <TextField
-                      className="textFieldPredict"
-                      label="Predicted Profit"
-                      variant="filled"
-                      color="secondary"
-                      focused
-                      InputProps={{
-                        className: classes.multilineColor,
-                      }}
-                      value={`Rp ${profit.toFixed(3)}`}
-                    />
-                  </Grid>
-                ) : (
-                  <></>
-                )}
               </Grid>
             </Container>
+            <br />
+            <Grid container justify="center">
+              <Grid item xs={1}>
+                <Link href="mailto:alfianm.ibrahim@gmail.com" target="_blank">
+                  <EmailIcon />
+                </Link>
+              </Grid>
+              <Grid item xs={1}>
+                <Link href="https://github.com/alfinm01" target="_blank">
+                  <GitHubIcon />
+                </Link>
+              </Grid>
+              <Grid item xs={1}>
+                <Link href="https://alfianmaulana.com" target="_blank">
+                  <LanguageIcon />
+                </Link>
+              </Grid>
+              <Grid item xs={1}>
+                <Link
+                  href="https://www.linkedin.com/in/alfinm01/"
+                  target="_blank"
+                >
+                  <LinkedInIcon />
+                </Link>
+              </Grid>
+              <Grid item xs={1}>
+                <Link
+                  href="https://www.instagram.com/alfian.maulanai/"
+                  target="_blank"
+                >
+                  <InstagramIcon />
+                </Link>
+              </Grid>
+              <Grid item xs={1}>
+                <Link
+                  href="https://medium.com/@alfianm.ibrahim"
+                  target="_blank"
+                >
+                  <LibraryBooksIcon />
+                </Link>
+              </Grid>
+            </Grid>
           </div>
         </div>
       </div>

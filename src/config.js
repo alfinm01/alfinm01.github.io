@@ -1,9 +1,5 @@
 const API = {
-  backend: "https://ecommerce-profit-aib.herokuapp.com/",
+  backend: "https://asia-southeast2-my-secreto.cloudfunctions.net/",
 }
-
-/* const API = {
-    backend: "http://localhost:5000"
-} */
 
 export default API
