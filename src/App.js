@@ -148,7 +148,7 @@ function App() {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" gutterBottom>
-                    My name is <b>Alfian (cimbot) Maulana</b>, and this is my
+                    My name is <b>Heryoka</b>, and this is my
                     personal{" "}
                     <a
                       href="https://secreto.site/"
@@ -195,23 +195,23 @@ function App() {
             <br />
             <Grid container justify="center">
               <Grid item xs={1}>
-                <Link href="mailto:alfianm.ibrahim@gmail.com" target="_blank">
+                <Link href="mailto:heryokaaaa@gmail.com" target="_blank">
                   <EmailIcon />
                 </Link>
               </Grid>
               <Grid item xs={1}>
-                <Link href="https://github.com/alfinm01" target="_blank">
+                <Link href="https://github.com/heryyy" target="_blank">
                   <GitHubIcon />
                 </Link>
               </Grid>
               <Grid item xs={1}>
-                <Link href="https://alfianmaulana.com" target="_blank">
+                <Link href="https://heryyy.com" target="_blank">
                   <LanguageIcon />
                 </Link>
               </Grid>
               <Grid item xs={1}>
                 <Link
-                  href="https://www.linkedin.com/in/alfinm01/"
+                  href="https://www.linkedin.com"
                   target="_blank"
                 >
                   <LinkedInIcon />
@@ -219,7 +219,7 @@ function App() {
               </Grid>
               <Grid item xs={1}>
                 <Link
-                  href="https://www.instagram.com/alfian.maulanai/"
+                  href="https://www.instagram.com/heryokaaa/"
                   target="_blank"
                 >
                   <InstagramIcon />
@@ -227,7 +227,7 @@ function App() {
               </Grid>
               <Grid item xs={1}>
                 <Link
-                  href="https://medium.com/@alfianm.ibrahim"
+                  href="https://medium.com"
                   target="_blank"
                 >
                   <LibraryBooksIcon />
